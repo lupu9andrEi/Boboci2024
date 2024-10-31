@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.drive.opmodetele;
+package org.firstinspires.ftc.teamcode.drive.opmodetele; //Înainte de a vă uita la comentariile de pe acest cod, recomand să le vedeți pe cele de la samplemecanumdrive
 
-import static java.lang.Math.abs;
+import static java.lang.Math.abs; //presupun că java.lang.Math.abs este o minunăție built-in pentru program
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -21,7 +21,7 @@ public class LinearDriveMode extends LinearOpMode {
     public double calculateThrottle(float x) {
         int sign = -1;
         if (x > 0) sign = 1;
-        return sign * 3 * abs(x);
+        return sign * 3 * abs(x); //liniile 16-24: legat de geometrie și de direcțiile robotului?
     }
 
     @Override
@@ -32,7 +32,7 @@ public class LinearDriveMode extends LinearOpMode {
         robot = new Robot(hardwareMap);
         while (robot.isInitialize() && opModeIsActive()) {
             idle();
-        }
+        } //bănuiesc că este pentru pornirea robotului
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData(">", "Initialized");
@@ -85,7 +85,7 @@ public class LinearDriveMode extends LinearOpMode {
             }
             else robot.crane.setGripper(0);
 
-            robot.drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y),(-gamepad1.left_stick_x),(-gamepad1.right_stick_x)));
+            robot.drive.setWeightedDrivePower(new Pose2d((-gamepad1.left_stick_y),(-gamepad1.left_stick_x),(-gamepad1.right_stick_x))); //controalele consolei (50-90)
 
 
 
@@ -104,7 +104,7 @@ public class LinearDriveMode extends LinearOpMode {
 //                telemetry.addData("CRANE TICKS RIGHT: ", robot.crane.motorCraneRight.getCurrentPosition());
 //                telemetry.addData("DIRECTION: ", direction);
 //                telemetry.addData("SERVO GRIPPER: ", robot.crane.servoGrippy1.getPosition());
-                telemetry.update();
+                telemetry.update(); //pare a fi și aici aferent comenzilor de pe consolă
             }
 
         }

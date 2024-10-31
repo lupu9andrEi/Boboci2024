@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.robot;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.NonNull; /*sunt Lupu Anrei, clasa a IX-a E, o să vă spun prin intermediul acestor comentarii ce înțeleg din cod (nu știu o boabă de Java) */
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
@@ -48,10 +48,10 @@ import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.TRACK_WI
 import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.drive.robot.DriveConstants.kV; //se poate observa cum sunt luate unele clase prin statementul opțional import ca programul să le poată citi mai ușor (?) 
 
 @Config
-public class  SampleMecanumDrive extends MecanumDrive {
+public class  SampleMecanumDrive extends MecanumDrive { //proprietățile samplemecanumdrive preiau proprietățile lui mecanumdrive pentru că e folosit statementul extend, probabil are de-a face cu sampleurile din competiție
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -59,27 +59,27 @@ public class  SampleMecanumDrive extends MecanumDrive {
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
-    public static double OMEGA_WEIGHT = 1;
+    public static double OMEGA_WEIGHT = 1; //se tot determină aci coeficienți și... WEIGHT, se remarcă VX și VY, probabil axele orizontale și verticale? Mai este și OMEGA, chiar nu știu ce rol are
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH); //se determină și se reglementează viteze și unghiuri, lucru destul de important, știu din puțina mea experiență cu programarea
+    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL); //și accelerația tre` reglementată
 
     private TrajectoryFollower follower;
 
-    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront; //bănuiesc că are legătură cu roțile, sau cel puțin cu direcția în care o ia robotul
     private List<DcMotorEx> motors;
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
-    private List<Integer> lastEncPositions = new ArrayList<>();
+    private List<Integer> lastEncPositions = new ArrayList<>(); //arrayu` era mulțime din câte îmi amintesc, sunt liste de poziții ețetera
     private List<Integer> lastEncVels = new ArrayList<>();
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
-        super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER); 
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -95,24 +95,24 @@ public class  SampleMecanumDrive extends MecanumDrive {
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+        imu.initialize(parameters); //de la 81 la 99 pot afirma cu mândrie că nu înțeleg absolut nimic
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront"); //iar chestiunea cu motoare și/sau roți 100-103
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //se stabilește frânarea
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
             motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-            motor.setMotorType(motorConfigurationType);
+            motor.setMotorType(motorConfigurationType); //stabilimm frumos configurația
         }
 
         if (RUN_USING_ENCODER) {
@@ -123,15 +123,15 @@ public class  SampleMecanumDrive extends MecanumDrive {
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
-        }
+        } //aici pune ce se întâmplă dacă motorul chiar merge
 
 
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
-        List<Integer> lastTrackingEncVels = new ArrayList<>();
+        List<Integer> lastTrackingEncVels = new ArrayList<>(); //iarăși direcții, unghiuri, viteze
 
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels)); // salut ce faci drag concomentator
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -157,7 +157,7 @@ public class  SampleMecanumDrive extends MecanumDrive {
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,
                 MAX_ANG_VEL, MAX_ANG_ACCEL
         );
-    }
+    } //comentariul de la 132 se aplică și pentru 142-160
 
     public void turnAsync(double angle) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(
@@ -191,18 +191,18 @@ public class  SampleMecanumDrive extends MecanumDrive {
 
     public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
         followTrajectorySequenceAsync(trajectorySequence);
-        waitForIdle();
+        waitForIdle(); //aceeași situațiune ca-n linia 160, dar avem și traiectorie de data aceasta, habar nu am care-i e rolul specific însă
     }
 
     public Pose2d getLastError() {
         return trajectorySequenceRunner.getLastPoseError();
-    }
+    } //dacă este o eroare, faci statementul return ca să îți dai seama că este o eroare, presupun
 
     public void update() {
         updatePoseEstimate();
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
-    }
+    } //void era o funcție, eu învățai la informatică
 
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy())
@@ -211,12 +211,12 @@ public class  SampleMecanumDrive extends MecanumDrive {
 
     public boolean isBusy() {
         return trajectorySequenceRunner.isBusy();
-    }
+    } //boolean e adevărat sau fals, dar ce înseamnă Busy?????
 
     public void setMode(DcMotor.RunMode runMode) {
         for (DcMotorEx motor : motors) {
             motor.setMode(runMode);
-        }
+        } //mai multe ajustațiuni pentru motor pe aici și în următoarele ~20 de linii
     }
 
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
@@ -250,7 +250,7 @@ public class  SampleMecanumDrive extends MecanumDrive {
                     VY_WEIGHT * drivePower.getY(),
                     OMEGA_WEIGHT * drivePower.getHeading()
             ).div(denom);
-        }
+        } //operații aritmetice care determină dacă este destul de puternic robotul ca să știe dacă ar trebui să mai facă niște operații aritmetice
 
         setDrivePower(vel);
     }
@@ -264,9 +264,9 @@ public class  SampleMecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             int position = motor.getCurrentPosition();
             lastEncPositions.add(position);
-            wheelPositions.add(encoderTicksToInches(position));
+            wheelPositions.add(encoderTicksToInches(position)); //se află poziția?
         }
-        return wheelPositions;
+        return wheelPositions; //nu știu cum să explic ce e nonnul sau override fără să copiez de pe un ziar online
     }
 
     @Override
@@ -280,7 +280,7 @@ public class  SampleMecanumDrive extends MecanumDrive {
             wheelVelocities.add(encoderTicksToInches(vel));
         }
         return wheelVelocities;
-    }
+    } //se determină viteza roților, nu aș fi putut ști acest lucru dacă nu era salvatoarea linie 282
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
@@ -288,7 +288,7 @@ public class  SampleMecanumDrive extends MecanumDrive {
         leftRear.setPower(v1);
         rightRear.setPower(v2);
         rightFront.setPower(v3);
-    }
+    } //legat de roți
 
     @Override
     public double getRawExternalHeading() {
@@ -311,3 +311,4 @@ public class  SampleMecanumDrive extends MecanumDrive {
         return new ProfileAccelerationConstraint(maxAccel);
     }
 }
+// CONCLUZIE: codul se concentrează pe motorul și roțile robotului, în general baza acestuia și se determină unghiuri, viteze, accelerațiuni
